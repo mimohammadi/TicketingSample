@@ -31,7 +31,7 @@ namespace Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TEntity> Get(int id)
+        public async Task<TEntity> Get(Guid id)
         {
             return await _context.Set<TEntity>().SingleOrDefaultAsync(x => x.Id == id);
         }

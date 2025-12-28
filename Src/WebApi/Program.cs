@@ -1,8 +1,6 @@
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Repository;
-using Service.Interface;
-using Service.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 var connetctionString = builder.Configuration.GetConnectionString("ConnectionStrings");
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(connetctionString));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

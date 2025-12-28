@@ -1,12 +1,10 @@
-﻿using Domain.Models.Product;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
     public class DataBaseContext:DbContext
     {
 
-        public DbSet<Product> Products { get; set; }
         public DataBaseContext(DbContextOptions options)
             : base(options)
         {

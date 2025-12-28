@@ -2,7 +2,7 @@
 {
     public class BaseEntity : SoftDelete 
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public DateTime? LastUpdateOn { get; set; }
 
