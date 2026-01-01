@@ -1,10 +1,11 @@
 ﻿using Domain;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Repository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity, 
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity,
         IAggregateRoot
     {
         private readonly DataBaseContext _context;
@@ -21,10 +22,9 @@ namespace Repository
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public async Task Delete(TEntity entity) 
-        {
-            if(entity == null) throw new ArgumentNullException(nameof(entity));
-            var val = await _context.Set<TEntity>().SingleOrDefaultAsync(x=>x.Id == entity.Id);
+        public async Task Delete(Guid id) 
+        {            
+            var val = await _context.Set<TEntity>().SingleOrDefaultAsync(x=>x.Id == id);
             if (val == null) throw new ArgumentException("شی یافت نشد");
             val.Delete();
             _context.Update(val);
@@ -33,13 +33,22 @@ namespace Repository
 
         public async Task<TEntity> Get(Guid id)
         {
-            return await _context.Set<TEntity>().SingleOrDefaultAsync(x => x.Id == id);
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAll(int skip, int take, Expression<Func<TEntity, bool>> prediction = null)
         {
-            return await _context.Set<TEntity>().AsQueryable().ToListAsync();
-            //return entities.AsEnumerable();
+            var entities = _context.Set<TEntity>().AsNoTracking().AsQueryable();
+
+            if(prediction != null)
+                entities = entities.Where(prediction).AsQueryable();
+
+            return await entities.Skip(skip).Take(take).ToListAsync();
+        }
+
+        public async Task<TEntity> GetByPrediction(Expression<Func<TEntity, bool>> prediction)
+        {
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(prediction);
         }
 
         public async Task Insert(TEntity entity)

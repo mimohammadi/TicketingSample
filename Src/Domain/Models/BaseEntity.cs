@@ -3,20 +3,20 @@
     public class BaseEntity : SoftDelete 
     {
         public Guid Id { get; set; }
-        public DateTime CreatedOn { get; set; } = DateTime.Now;
-        public DateTime? LastUpdateOn { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? UpdatedAt { get; set; }
 
 
         public virtual void Delete()
         {
             IsDeleted = true;
-            DeletedOn = DateTime.Now;
+            DeletedAt = DateTime.Now;
         }
     }
 
     public class SoftDelete
     {
         public bool IsDeleted { get; set; } = false;
-        public DateTime? DeletedOn { get; set; }
+        public DateTime? DeletedAt { get; set; }
     }
 }

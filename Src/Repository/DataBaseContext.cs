@@ -1,15 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Models.Tickets;
+using Domain.Models.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
     public class DataBaseContext:DbContext
     {
 
-        public DataBaseContext(DbContextOptions options)
+        public DataBaseContext(DbContextOptions<DataBaseContext> options)
             : base(options)
         {
 
         }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -17,18 +22,6 @@ namespace Repository
             modelBuilder.ApplyConfigurationsFromAssembly(assembly);
 
             base.OnModelCreating(modelBuilder);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-#if DEBUG
-
-            optionsBuilder
-               .UseSqlServer("Server=.;Initial Catalog=OnlineShopDB;Persist Security Info=True;MultipleActiveResultSets=true;User ID=sa;Password=123;TrustServerCertificate=Yes");
-
-#endif
-            base.OnConfiguring(optionsBuilder);
-
         }
     }
 }
